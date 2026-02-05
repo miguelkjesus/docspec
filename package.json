@@ -1,0 +1,28 @@
+{
+  "name": "docspec",
+  "version": "0.0.0",
+  "description": "",
+  "homepage": "https://github.com/miguelkjesus/docspec#readme",
+  "bugs": {
+    "url": "https://github.com/miguelkjesus/docspec/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miguelkjesus/docspec.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.8.1",
+    "typescript-eslint": "^8.54.0"
+  }
+}
