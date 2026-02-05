@@ -317,6 +317,71 @@ Restraint is intentional.
 
 ---
 
+## Future Ideas & Considerations
+
+### Versioned documentation from git refs
+
+Because documentation is compiled from source into structured data, it is possible to generate **multiple versions of the docs** directly from git history.
+
+#### Proposed model
+
+- **Git tags** represent immutable, released documentation versions
+  - e.g. `v1.2.0`, `v1.3.0`
+- A special **development version** (e.g. `dev`) is built from a chosen branch (usually `main`)
+
+This allows:
+- users to view docs that exactly match the version of the API they are using
+- maintainers to preview in-progress documentation
+- static hosting without runtime complexity
+
+#### Important distinction
+
+- **Tags = canonical, historical truth**
+- **Branches = previews**
+
+These should never be conflated in the UI or build system.
+
+---
+
+### Fixing mistakes in versioned docs
+
+A natural concern with tag-based documentation is:
+> “What if a spelling mistake or minor documentation error ships with a release?”
+
+This system intentionally treats versioned docs the same way code is treated:
+
+- Released versions are **immutable**
+- Corrections are made in **new versions**
+
+In practice, this mirrors how real APIs work:
+- If `v1.2.0` has a typo, it remains as historical record
+- The fix lands in `v1.2.1` or `v1.3.0`
+
+This preserves trust and reproducibility.
+
+#### Optional mitigation strategies
+
+These are intentionally *not* defaults, but could be offered as opt-in features later:
+
+- **Patch overlays**: allow a small, explicit "docs-only patch" layer for older versions
+- **UI annotations**: display a notice like “You are viewing documentation for an older version”
+- **Redirect hints**: suggest newer versions when viewing outdated docs
+
+The core philosophy remains: correctness and clarity over silent mutation.
+
+---
+
+### Non-goal
+
+Automatically rewriting historical documentation is considered a non-goal.
+
+If documentation can change retroactively, it becomes impossible to answer:
+> “What did the docs say when this version was released?”
+
+This system intentionally avoids that ambiguity.
+
+---
+
 ## Summary
 
 This project is:
