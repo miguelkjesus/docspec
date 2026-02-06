@@ -1,9 +1,8 @@
-import { defineConfig } from 'eslint/config'
-
 import js from '@eslint/js'
-import ts from 'typescript-eslint'
+import { defineConfig } from 'eslint/config'
 import prettier from 'eslint-config-prettier'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import ts from 'typescript-eslint'
 
 export default defineConfig([
   // Ignore generated files
@@ -15,6 +14,18 @@ export default defineConfig([
   js.configs.recommended,
   ts.configs.strictTypeChecked,
   ts.configs.stylisticTypeChecked,
+
+  // TypeScript parser options for type-checked rules
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: ['eslint.config.js'],
+        },
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
 
   {
     plugins: {
