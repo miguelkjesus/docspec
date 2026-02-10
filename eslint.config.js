@@ -20,7 +20,7 @@ export default defineConfig([
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['eslint.config.js'],
+          allowDefaultProject: ['eslint.config.js', 'jest.config.ts'],
         },
         tsconfigRootDir: import.meta.dirname,
       },
