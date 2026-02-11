@@ -1,6 +1,8 @@
 import js from '@eslint/js'
 import { defineConfig } from 'eslint/config'
 import prettier from 'eslint-config-prettier'
+import jest from 'eslint-plugin-jest'
+import jestExtended from 'eslint-plugin-jest-extended'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import ts from 'typescript-eslint'
 
@@ -10,23 +12,24 @@ export default defineConfig([
     ignores: ['dist/**', 'node_modules/**'],
   },
 
-  // Base rules
+  // Language rules
   js.configs.recommended,
   ts.configs.strictTypeChecked,
   ts.configs.stylisticTypeChecked,
 
-  // TypeScript parser options for type-checked rules
+  // TypeScript
   {
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['eslint.config.js'],
+          allowDefaultProject: ['eslint.config.js', 'jest.config.ts'],
         },
         tsconfigRootDir: import.meta.dirname,
       },
     },
   },
 
+  // Import sorting
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
@@ -53,6 +56,22 @@ export default defineConfig([
       ],
       'simple-import-sort/exports': 'error',
     },
+  },
+
+  // Jest
+  {
+    files: ['**/*.spec.ts'],
+    ...jest.configs['flat/style'],
+    rules: {
+      'jest/max-expects': ['error', { max: 1 }],
+      'jest/no-unnecessary-assertion': 'error',
+    },
+  },
+
+  // Jest extended
+  {
+    files: ['**/*.spec.ts'],
+    ...jestExtended.configs['flat/all'],
   },
 
   // Must come after all configs as this turns off any rules that will conflict with prettier
