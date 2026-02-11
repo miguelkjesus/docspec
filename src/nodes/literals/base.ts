@@ -1,4 +1,4 @@
-import { dedent } from './utils'
+import { dedent } from '@/utils/string'
 
 export interface LiteralNode {
   type: string
