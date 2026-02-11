@@ -1,95 +1,76 @@
 import { dedent } from './string'
 
-describe('dedent', () => {
+describe(dedent, () => {
   it('removes common leading indentation', () => {
-    const input = `
+    const result = dedent(`
       hello
       world
-    `
+    `)
 
-    expect(dedent(input)).toBe(
-      `hello
-world`,
-    )
+    expect(result).toBe('hello\nworld')
   })
 
   it('preserves relative indentation', () => {
-    const input = `
+    const result = dedent(`
       hello
         world
-    `
+    `)
 
-    expect(dedent(input)).toBe(
-      `hello
-  world`,
-    )
+    expect(result).toBe('hello\n  world')
   })
 
   it('ignores empty leading and trailing lines', () => {
-    const input = `
+    const result = dedent(`
 
 
         hello
           world
 
 
-    `
+    `)
 
-    expect(dedent(input)).toBe(
-      `hello
-  world`,
-    )
+    expect(result).toBe('hello\n  world')
   })
 
   it('does not remove indentation from empty lines in the middle', () => {
-    const input = `
+    const result = dedent(`
       hello
 
         world
-    `
+    `)
 
-    expect(dedent(input)).toBe(
-      `hello
-
-  world`,
-    )
+    expect(result).toBe('hello\n\n  world')
   })
 
   it('handles single-line strings', () => {
-    const input = `
+    const result = dedent(`
         hello
-    `
+    `)
 
-    expect(dedent(input)).toBe('hello')
+    expect(result).toBe('hello')
   })
 
   it('returns an empty string when given only whitespace', () => {
-    const input = `
-      
-      
-    `
+    const result = dedent(`
 
-    expect(dedent(input)).toBe('')
+
+    `)
+
+    expect(result).toBe('')
   })
 
   it('handles Windows line endings', () => {
-    const input = '\r\n    hello\r\n      world\r\n'
+    const result = dedent('\r\n    hello\r\n      world\r\n')
 
-    expect(dedent(input)).toBe(
-      `hello
-  world`,
-    )
+    expect(result).toBe('hello\n  world')
   })
 
   it('does not change already dedented text', () => {
-    const input = `
+    const result = dedent(`
 hello
   world
-    `
+    `)
 
-    expect(dedent(input)).toBe(
-      `hello
-  world`,
-    )
+    expect(result).toBe('hello\n  world')
   })
 })
