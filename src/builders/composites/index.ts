@@ -1,7 +1,0 @@
-export * from './base'
-export * from './class'
-export * from './examples'
-export * from './function'
-export * from './method'
-export * from './parameter'
-export * from './property'
