@@ -15,8 +15,21 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "build": "tsc"
+    "prepare": "husky",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "test": "jest"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -26,7 +39,9 @@
     "eslint-plugin-jest": "^29.13.0",
     "eslint-plugin-jest-extended": "^3.0.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
     "jest": "^30.2.0",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3",

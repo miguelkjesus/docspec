@@ -5,8 +5,12 @@ on:
     branches: [master]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  check-style:
+  code-quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,10 +20,17 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npx eslint --max-warnings 0 .
-      - run: npx prettier --check .
 
-  run-tests:
+      - name: eslint
+        run: npm run lint:check -- --max-warnings 0
+
+      - name: format
+        run: npm run format:check
+
+      - name: typecheck
+        run: npm run typecheck
+
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,4 +40,4 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm test
+      - run: npm test -- --ci
