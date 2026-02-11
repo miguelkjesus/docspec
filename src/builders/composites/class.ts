@@ -1,30 +1,48 @@
 import { ClassNode, createMethod, createProperty } from '@/nodes'
+import { AnyAbstractClass, AnyFunction, AnyKey } from '@/utils/types'
 
 import { CommonContentBuilder } from './common-content'
 import { MethodBuilder } from './method'
 import { PropertyBuilder } from './property'
 
-type MethodNamesOf<T> = Extract<
-  {
-    [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never
-  }[keyof T],
-  string
->
+type MethodKeysOf<T> = {
+  [K in keyof T]: T[K] extends AnyFunction ? K : never
+}[keyof T]
 
-export class ClassBuilder<T> extends CommonContentBuilder<ClassNode> {
+export class ClassBuilder<
+  Constructor extends AnyAbstractClass,
+> extends CommonContentBuilder<ClassNode> {
   constructor() {
     super({ type: 'class', content: [] })
   }
 
-  method(isStatic: boolean, key: MethodNamesOf<T>, method: (builder: MethodBuilder) => void) {
+  private method_(isStatic: boolean, key: AnyKey, method: (builder: MethodBuilder) => void) {
     this.$node.content.push(createMethod(isStatic, key, method))
   }
 
-  property(
-    isStatic: boolean,
-    key: Extract<keyof T, string>,
-    property: (builder: PropertyBuilder) => void,
-  ) {
+  method = Object.assign(
+    (key: MethodKeysOf<InstanceType<Constructor>>, method: (builder: MethodBuilder) => void) => {
+      this.method_(false, key, method)
+    },
+    {
+      static: (key: MethodKeysOf<Constructor>, method: (builder: MethodBuilder) => void) => {
+        this.method_(true, key, method)
+      },
+    },
+  )
+
+  private property_(isStatic: boolean, key: AnyKey, property: (builder: PropertyBuilder) => void) {
     this.$node.content.push(createProperty(isStatic, key, property))
   }
+
+  property = Object.assign(
+    (key: keyof InstanceType<Constructor>, property: (builder: PropertyBuilder) => void) => {
+      this.property_(false, key, property)
+    },
+    {
+      static: (key: keyof Constructor, property: (builder: PropertyBuilder) => void) => {
+        this.property_(true, key, property)
+      },
+    },
+  )
 }

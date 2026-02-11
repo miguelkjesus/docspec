@@ -1,10 +1,11 @@
 import { createParameter, MethodNode } from '@/nodes'
+import { AnyKey } from '@/utils/types'
 
 import { CommonContentBuilder } from './common-content'
 import { ParameterBuilder } from './parameter'
 
 export class MethodBuilder extends CommonContentBuilder<MethodNode> {
-  constructor(isStatic: boolean, key: string) {
+  constructor(isStatic: boolean, key: AnyKey) {
     super({ type: 'method', isStatic, key, content: [] })
   }
 
