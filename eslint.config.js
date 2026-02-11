@@ -2,7 +2,6 @@ import js from '@eslint/js'
 import { defineConfig } from 'eslint/config'
 import prettier from 'eslint-config-prettier'
 import jest from 'eslint-plugin-jest'
-import jestExtended from 'eslint-plugin-jest-extended'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import ts from 'typescript-eslint'
 
@@ -66,12 +65,6 @@ export default defineConfig([
       'jest/max-expects': ['error', { max: 1 }],
       'jest/no-unnecessary-assertion': 'error',
     },
-  },
-
-  // Jest extended
-  {
-    files: ['**/*.spec.ts'],
-    ...jestExtended.configs['flat/all'],
   },
 
   // Must come after all configs as this turns off any rules that will conflict with prettier
