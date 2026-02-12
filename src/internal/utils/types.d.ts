@@ -1,10 +1,16 @@
-export type AnyKey = string | symbol | number
+export type Key = string | symbol | number
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyFunction = (...args: any[]) => any
+export type Callback = (...args: any[]) => any
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyAbstractClass = abstract new (...args: any[]) => any
+export type AbstractClass = abstract new (...args: any[]) => any
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyClass = new (...args: any[]) => any
+export type Class = new (...args: any[]) => any
+
+export type InternalKeys<T> = {
+  [K in keyof T]: K extends `__${string}` ? K : never
+}[keyof T]
+
+export type StripInternals<T> = Omit<T, InternalKeys<T>>

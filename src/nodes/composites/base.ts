@@ -5,21 +5,21 @@ export interface CompositeNode {
   content: (LiteralNode | CompositeNode)[]
 }
 
-export interface WithContent<Content extends LiteralNode | CompositeNode> extends CompositeNode {
+export interface NodeWithContent<
+  Content extends LiteralNode | CompositeNode,
+> extends CompositeNode {
   content: Content[]
 }
 
-export abstract class CompositeBuilder<Node extends CompositeNode> {
-  /** @internal */
-  $node: Node
+export abstract class __CompositeBuilder<Node extends CompositeNode> {
+  __node: Node
 
   constructor(node: Node) {
-    this.$node = node
+    this.__node = node
   }
 
-  /** @internal */
-  $using(init: (builder: this) => void) {
+  __build(init: (builder: this) => void) {
     init(this)
-    return this.$node
+    return this.__node
   }
 }

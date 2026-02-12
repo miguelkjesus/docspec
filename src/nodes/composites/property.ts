@@ -1,25 +1,27 @@
-import { AnyKey } from '@/internal/utils/types'
+import { Key, StripInternals } from '@/internal/utils/types'
 
 import { CompositeNode } from './base'
-import { CommonContentBuilder, CommonContentNode } from './common'
+import { __CommonContentBuilder, CommonContentNode } from './common'
 
 export interface PropertyNode extends CompositeNode {
   type: 'property'
   isStatic: boolean
-  key: AnyKey
+  key: Key
   content: CommonContentNode[]
 }
 
-export class PropertyBuilder extends CommonContentBuilder<PropertyNode> {
-  constructor(isStatic: boolean, key: AnyKey) {
+class __PropertyBuilder extends __CommonContentBuilder<PropertyNode> {
+  constructor(isStatic: boolean, key: Key) {
     super({ type: 'property', isStatic, key, content: [] })
   }
 }
 
+export type PropertyBuilder = StripInternals<__PropertyBuilder>
+
 export function createProperty(
   isStatic: boolean,
-  key: AnyKey,
+  key: Key,
   init: (builder: PropertyBuilder) => void,
 ) {
-  return new PropertyBuilder(isStatic, key).$using(init)
+  return new __PropertyBuilder(isStatic, key).__build(init)
 }
