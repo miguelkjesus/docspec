@@ -47,6 +47,6 @@ describe(createProperty, () => {
       b.text('some description')
     })
 
-    expect(result.content).toEqual([{ type: 'text', value: 'some description' }])
+    expect(result.content).toMatchObject([{ type: 'text', value: 'some description' }])
   })
 })

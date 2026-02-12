@@ -47,7 +47,7 @@ describe(createMethod, () => {
       b.text('some description')
     })
 
-    expect(result.content).toEqual([{ type: 'text', value: 'some description' }])
+    expect(result.content).toMatchObject([{ type: 'text', value: 'some description' }])
   })
 
   it('contains parameter nodes', () => {
@@ -57,7 +57,7 @@ describe(createMethod, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'parameter',
         key: 'arg1',

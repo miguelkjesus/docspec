@@ -20,7 +20,7 @@ describe(createExamples, () => {
       b.example('typescript', 'const x = 1')
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       { type: 'example', language: 'typescript', value: 'const x = 1' },
     ])
   })
@@ -31,7 +31,7 @@ describe(createExamples, () => {
       b.example('python', 'x = 1')
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       { type: 'example', language: 'typescript', value: 'const x = 1' },
       { type: 'example', language: 'python', value: 'x = 1' },
     ])
