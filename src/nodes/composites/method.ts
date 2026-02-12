@@ -23,6 +23,10 @@ class __MethodBuilder extends __CommonContentBuilder<MethodNode> {
 
 export type MethodBuilder = StripInternals<__MethodBuilder>
 
-export function createMethod(isStatic: boolean, key: Key, init: (builder: MethodBuilder) => void) {
+export function createMethod(
+  isStatic: boolean,
+  key: Key,
+  init: string | ((builder: MethodBuilder) => void),
+) {
   return new __MethodBuilder(isStatic, key).__build(init)
 }

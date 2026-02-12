@@ -21,7 +21,7 @@ export type PropertyBuilder = StripInternals<__PropertyBuilder>
 export function createProperty(
   isStatic: boolean,
   key: Key,
-  init: (builder: PropertyBuilder) => void,
+  init: string | ((builder: PropertyBuilder) => void),
 ) {
   return new __PropertyBuilder(isStatic, key).__build(init)
 }

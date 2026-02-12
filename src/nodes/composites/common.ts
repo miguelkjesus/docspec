@@ -1,3 +1,5 @@
+import { text } from '@/builder-shorthands'
+
 import {
   createExample,
   createMarkdown,
@@ -17,6 +19,14 @@ export type CommonContentNode = TextNode | MarkdownNode | ExampleNode | Examples
 export abstract class __CommonContentBuilder<
   Node extends NodeWithContent<CommonContentNode | LiteralNode | CompositeNode>,
 > extends __CompositeBuilder<Node> {
+  override __build(init: string | ((builder: this) => void)) {
+    if (typeof init === 'string') {
+      init = text(init)
+    }
+
+    return super.__build(init)
+  }
+
   readonly text = (text: string) => {
     this.__node.content.push(createText(text))
   }

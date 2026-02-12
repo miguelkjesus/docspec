@@ -17,6 +17,6 @@ class __ParameterBuilder extends __CommonContentBuilder<ParameterNode> {
 
 export type ParameterBuilder = StripInternals<__ParameterBuilder>
 
-export function createParameter(key: string, init: (builder: ParameterBuilder) => void) {
+export function createParameter(key: string, init: string | ((builder: ParameterBuilder) => void)) {
   return new __ParameterBuilder(key).__build(init)
 }

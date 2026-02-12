@@ -21,6 +21,6 @@ class __FunctionBuilder extends __CommonContentBuilder<FunctionNode> {
 
 export type FunctionBuilder = StripInternals<__FunctionBuilder>
 
-export function createFunction(init: (builder: FunctionBuilder) => void) {
+export function createFunction(init: string | ((builder: FunctionBuilder) => void)) {
   return new __FunctionBuilder().__build(init)
 }

@@ -52,6 +52,8 @@ class __ClassBuilder<Constructor extends AbstractClass> extends __CommonContentB
 
 export type ClassBuilder<T extends AbstractClass> = StripInternals<__ClassBuilder<T>>
 
-export function createClass<T extends AbstractClass>(cls: (builder: ClassBuilder<T>) => void) {
-  return new __ClassBuilder<T>().__build(cls)
+export function createClass<T extends AbstractClass>(
+  init: string | ((builder: ClassBuilder<T>) => void),
+) {
+  return new __ClassBuilder<T>().__build(init)
 }
