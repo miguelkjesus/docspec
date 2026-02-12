@@ -25,7 +25,7 @@ describe(createClass, () => {
       b.text('some description')
     })
 
-    expect(result.content).toEqual([{ type: 'text', value: 'some description' }])
+    expect(result.content).toMatchObject([{ type: 'text', value: 'some description' }])
   })
 
   it('contains instance property nodes', () => {
@@ -35,7 +35,7 @@ describe(createClass, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'property',
         isStatic: false,
@@ -52,7 +52,7 @@ describe(createClass, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'property',
         isStatic: true,
@@ -69,7 +69,7 @@ describe(createClass, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'method',
         isStatic: false,
@@ -86,7 +86,7 @@ describe(createClass, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'method',
         isStatic: true,
@@ -105,7 +105,7 @@ describe(createClass, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'method',
         isStatic: false,

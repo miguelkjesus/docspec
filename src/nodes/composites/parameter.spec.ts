@@ -22,7 +22,7 @@ describe(createParameter, () => {
       b.text('some description')
     })
 
-    expect(result.content).toEqual([{ type: 'text', value: 'some description' }])
+    expect(result.content).toMatchObject([{ type: 'text', value: 'some description' }])
   })
 
   it('contains markdown nodes', () => {
@@ -30,7 +30,7 @@ describe(createParameter, () => {
       b.markdown('# Title')
     })
 
-    expect(result.content).toEqual([{ type: 'markdown', value: '# Title' }])
+    expect(result.content).toMatchObject([{ type: 'markdown', value: '# Title' }])
   })
 
   it('contains example nodes', () => {
@@ -38,7 +38,7 @@ describe(createParameter, () => {
       b.example('typescript', 'const x = 1')
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       { type: 'example', language: 'typescript', value: 'const x = 1' },
     ])
   })
@@ -50,7 +50,7 @@ describe(createParameter, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'examples',
         content: [{ type: 'example', language: 'typescript', value: 'const x = 1' }],

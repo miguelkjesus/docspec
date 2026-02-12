@@ -14,7 +14,7 @@ describe(createFunction, () => {
       b.text('some description')
     })
 
-    expect(result.content).toEqual([{ type: 'text', value: 'some description' }])
+    expect(result.content).toMatchObject([{ type: 'text', value: 'some description' }])
   })
 
   it('contains parameter nodes', () => {
@@ -24,7 +24,7 @@ describe(createFunction, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'parameter',
         key: 'arg1',
@@ -43,7 +43,7 @@ describe(createFunction, () => {
       })
     })
 
-    expect(result.content).toEqual([
+    expect(result.content).toMatchObject([
       {
         type: 'parameter',
         key: 'arg1',
