@@ -1,30 +1,28 @@
-import { AnyKey } from '@/internal/utils/types'
+import { Key, StripInternals } from '@/internal/utils/types'
 
 import { CompositeNode } from './base'
-import { CommonContentBuilder, CommonContentNode } from './common'
+import { __CommonContentBuilder, CommonContentNode } from './common'
 import { createParameter, ParameterBuilder, ParameterNode } from './parameter'
 
 export interface MethodNode extends CompositeNode {
   type: 'method'
   isStatic: boolean
-  key: AnyKey
+  key: Key
   content: (CommonContentNode | ParameterNode)[]
 }
 
-export class MethodBuilder extends CommonContentBuilder<MethodNode> {
-  constructor(isStatic: boolean, key: AnyKey) {
+class __MethodBuilder extends __CommonContentBuilder<MethodNode> {
+  constructor(isStatic: boolean, key: Key) {
     super({ type: 'method', isStatic, key, content: [] })
   }
 
   parameter(key: string, parameter: (builder: ParameterBuilder) => void) {
-    this.$node.content.push(createParameter(key, parameter))
+    this.__node.content.push(createParameter(key, parameter))
   }
 }
 
-export function createMethod(
-  isStatic: boolean,
-  key: AnyKey,
-  init: (builder: MethodBuilder) => void,
-) {
-  return new MethodBuilder(isStatic, key).$using(init)
+export type MethodBuilder = StripInternals<__MethodBuilder>
+
+export function createMethod(isStatic: boolean, key: Key, init: (builder: MethodBuilder) => void) {
+  return new __MethodBuilder(isStatic, key).__build(init)
 }

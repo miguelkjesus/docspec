@@ -1,7 +1,7 @@
-import { AnyAbstractClass, AnyFunction, AnyKey } from '@/internal/utils/types'
+import { AbstractClass, Callback, Key, StripInternals } from '@/internal/utils/types'
 
 import { CompositeNode } from './base'
-import { CommonContentBuilder, CommonContentNode } from './common'
+import { __CommonContentBuilder, CommonContentNode } from './common'
 import { createMethod, MethodBuilder, MethodNode } from './method'
 import { createProperty, PropertyBuilder, PropertyNode } from './property'
 
@@ -11,18 +11,16 @@ export interface ClassNode extends CompositeNode {
 }
 
 type MethodKeysOf<T> = {
-  [K in keyof T]: T[K] extends AnyFunction ? K : never
+  [K in keyof T]: T[K] extends Callback ? K : never
 }[keyof T]
 
-export class ClassBuilder<
-  Constructor extends AnyAbstractClass,
-> extends CommonContentBuilder<ClassNode> {
+class __ClassBuilder<Constructor extends AbstractClass> extends __CommonContentBuilder<ClassNode> {
   constructor() {
     super({ type: 'class', content: [] })
   }
 
-  private method_(isStatic: boolean, key: AnyKey, method: (builder: MethodBuilder) => void) {
-    this.$node.content.push(createMethod(isStatic, key, method))
+  private method_(isStatic: boolean, key: Key, method: (builder: MethodBuilder) => void) {
+    this.__node.content.push(createMethod(isStatic, key, method))
   }
 
   method = Object.assign(
@@ -36,8 +34,8 @@ export class ClassBuilder<
     },
   )
 
-  private property_(isStatic: boolean, key: AnyKey, property: (builder: PropertyBuilder) => void) {
-    this.$node.content.push(createProperty(isStatic, key, property))
+  private property_(isStatic: boolean, key: Key, property: (builder: PropertyBuilder) => void) {
+    this.__node.content.push(createProperty(isStatic, key, property))
   }
 
   property = Object.assign(
@@ -52,6 +50,8 @@ export class ClassBuilder<
   )
 }
 
-export function createClass<T extends AnyAbstractClass>(cls: (builder: ClassBuilder<T>) => void) {
-  return new ClassBuilder<T>().$using(cls)
+export type ClassBuilder<T extends AbstractClass> = StripInternals<__ClassBuilder<T>>
+
+export function createClass<T extends AbstractClass>(cls: (builder: ClassBuilder<T>) => void) {
+  return new __ClassBuilder<T>().__build(cls)
 }

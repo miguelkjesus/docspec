@@ -1,5 +1,7 @@
+import { StripInternals } from '@/internal/utils/types'
+
 import { CompositeNode } from './base'
-import { CommonContentBuilder, CommonContentNode } from './common'
+import { __CommonContentBuilder, CommonContentNode } from './common'
 
 export interface ParameterNode extends CompositeNode {
   type: 'parameter'
@@ -7,12 +9,14 @@ export interface ParameterNode extends CompositeNode {
   content: CommonContentNode[]
 }
 
-export class ParameterBuilder extends CommonContentBuilder<ParameterNode> {
+class __ParameterBuilder extends __CommonContentBuilder<ParameterNode> {
   constructor(key: string) {
     super({ type: 'parameter', key, content: [] })
   }
 }
 
+export type ParameterBuilder = StripInternals<__ParameterBuilder>
+
 export function createParameter(key: string, init: (builder: ParameterBuilder) => void) {
-  return new ParameterBuilder(key).$using(init)
+  return new __ParameterBuilder(key).__build(init)
 }
