@@ -14,7 +14,7 @@ class __ExamplesBuilder extends __CompositeBuilder<ExamplesNode> {
     super({ type: 'examples', content: [] })
   }
 
-  example(language: string, example: string) {
+  readonly example = (language: string, example: string) => {
     this.__node.content.push(createExample(language, example))
   }
 }

@@ -23,7 +23,7 @@ class __ClassBuilder<Constructor extends AbstractClass> extends __CommonContentB
     this.__node.content.push(createMethod(isStatic, key, method))
   }
 
-  method = Object.assign(
+  readonly method = Object.assign(
     (key: MethodKeysOf<InstanceType<Constructor>>, method: (builder: MethodBuilder) => void) => {
       this.method_(false, key, method)
     },
@@ -38,7 +38,7 @@ class __ClassBuilder<Constructor extends AbstractClass> extends __CommonContentB
     this.__node.content.push(createProperty(isStatic, key, property))
   }
 
-  property = Object.assign(
+  readonly property = Object.assign(
     (key: keyof InstanceType<Constructor>, property: (builder: PropertyBuilder) => void) => {
       this.property_(false, key, property)
     },

@@ -17,19 +17,19 @@ export type CommonContentNode = TextNode | MarkdownNode | ExampleNode | Examples
 export abstract class __CommonContentBuilder<
   Node extends NodeWithContent<CommonContentNode | LiteralNode | CompositeNode>,
 > extends __CompositeBuilder<Node> {
-  text = (text: string) => {
+  readonly text = (text: string) => {
     this.__node.content.push(createText(text))
   }
 
-  markdown(markdown: string) {
+  readonly markdown = (markdown: string) => {
     this.__node.content.push(createMarkdown(markdown))
   }
 
-  example(language: string, example: string) {
+  readonly example = (language: string, example: string) => {
     this.__node.content.push(createExample(language, example))
   }
 
-  examples(examples: (builder: ExamplesBuilder) => void) {
+  readonly examples = (examples: (builder: ExamplesBuilder) => void) => {
     this.__node.content.push(createExamples(examples))
   }
 }

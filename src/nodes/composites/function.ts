@@ -14,7 +14,7 @@ class __FunctionBuilder extends __CommonContentBuilder<FunctionNode> {
     super({ type: 'function', content: [] })
   }
 
-  parameter(key: string, parameter: (builder: ParameterBuilder) => void) {
+  readonly parameter = (key: string, parameter: (builder: ParameterBuilder) => void) => {
     this.__node.content.push(createParameter(key, parameter))
   }
 }

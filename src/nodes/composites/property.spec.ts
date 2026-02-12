@@ -49,4 +49,18 @@ describe(createProperty, () => {
 
     expect(result.content).toMatchObject([{ type: 'text', value: 'some description' }])
   })
+
+  it('supports destructuring builder methods', () => {
+    const result = createProperty(false, 'foo', ({ text, markdown, example }) => {
+      text('description')
+      markdown('# Title')
+      example('typescript', 'const x = 1')
+    })
+
+    expect(result.content).toMatchObject([
+      { type: 'text', value: 'description' },
+      { type: 'markdown', value: '# Title' },
+      { type: 'example', language: 'typescript', value: 'const x = 1' },
+    ])
+  })
 })

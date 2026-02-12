@@ -16,7 +16,7 @@ class __MethodBuilder extends __CommonContentBuilder<MethodNode> {
     super({ type: 'method', isStatic, key, content: [] })
   }
 
-  parameter(key: string, parameter: (builder: ParameterBuilder) => void) {
+  readonly parameter = (key: string, parameter: (builder: ParameterBuilder) => void) => {
     this.__node.content.push(createParameter(key, parameter))
   }
 }

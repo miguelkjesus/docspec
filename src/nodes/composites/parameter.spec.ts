@@ -57,4 +57,22 @@ describe(createParameter, () => {
       },
     ])
   })
+
+  it('supports destructuring builder methods', () => {
+    const result = createParameter('foo', ({ text, markdown, example, examples }) => {
+      text('description')
+      markdown('# Title')
+      example('typescript', 'const x = 1')
+      examples(({ example }) => {
+        example('python', 'x = 1')
+      })
+    })
+
+    expect(result.content).toMatchObject([
+      { type: 'text', value: 'description' },
+      { type: 'markdown', value: '# Title' },
+      { type: 'example', language: 'typescript', value: 'const x = 1' },
+      { type: 'examples', content: [{ type: 'example', language: 'python', value: 'x = 1' }] },
+    ])
+  })
 })

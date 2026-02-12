@@ -120,4 +120,26 @@ describe(createClass, () => {
       },
     ])
   })
+
+  it('supports destructuring builder methods', () => {
+    const result = createClass<typeof TestClass>(({ text, method, property }) => {
+      text('description')
+      method('myMethod', ({ text }) => {
+        text('method description')
+      })
+      property('myProp', ({ text }) => {
+        text('property description')
+      })
+    })
+
+    expect(result.content).toMatchObject([
+      { type: 'text', value: 'description' },
+      { type: 'method', key: 'myMethod', content: [{ type: 'text', value: 'method description' }] },
+      {
+        type: 'property',
+        key: 'myProp',
+        content: [{ type: 'text', value: 'property description' }],
+      },
+    ])
+  })
 })

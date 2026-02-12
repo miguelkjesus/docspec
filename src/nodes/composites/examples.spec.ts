@@ -36,4 +36,16 @@ describe(createExamples, () => {
       { type: 'example', language: 'python', value: 'x = 1' },
     ])
   })
+
+  it('supports destructuring builder methods', () => {
+    const result = createExamples(({ example }) => {
+      example('typescript', 'const x = 1')
+      example('python', 'x = 1')
+    })
+
+    expect(result.content).toMatchObject([
+      { type: 'example', language: 'typescript', value: 'const x = 1' },
+      { type: 'example', language: 'python', value: 'x = 1' },
+    ])
+  })
 })

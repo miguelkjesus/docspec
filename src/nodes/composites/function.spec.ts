@@ -56,4 +56,18 @@ describe(createFunction, () => {
       },
     ])
   })
+
+  it('supports destructuring builder methods', () => {
+    const result = createFunction(({ text, parameter }) => {
+      text('description')
+      parameter('arg1', ({ text }) => {
+        text('first argument')
+      })
+    })
+
+    expect(result.content).toMatchObject([
+      { type: 'text', value: 'description' },
+      { type: 'parameter', key: 'arg1', content: [{ type: 'text', value: 'first argument' }] },
+    ])
+  })
 })
