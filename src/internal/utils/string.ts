@@ -1,3 +1,14 @@
+export function templateTag<Return>(func: (text: string) => Return) {
+  return (strings: TemplateStringsArray | string, ...expr: string[]) => {
+    if (typeof strings === 'string') {
+      return func(strings)
+    }
+
+    const text = strings.reduce((acc, str, i) => acc + str + (expr[i]?.toString() ?? ''), '')
+    return func(text)
+  }
+}
+
 export function dedent(value: string) {
   const lines = value.replace(/\r\n/g, '\n').split('\n')
 
