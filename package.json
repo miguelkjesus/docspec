@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",

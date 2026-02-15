@@ -14,3 +14,7 @@ export type InternalKeys<T> = {
 }[keyof T]
 
 export type StripInternals<T> = Omit<T, InternalKeys<T>>
+
+export type MethodKeysOf<T> = {
+  [K in keyof T]: T[K] extends Callback ? K : never
+}[keyof T]

@@ -9,6 +9,14 @@ export interface ParameterNode extends CompositeNode {
   content: CommonContentNode[]
 }
 
+export interface AddParameter {
+  readonly parameter: (
+    key: string,
+    parameter: string | ((builder: ParameterBuilder) => void),
+  ) => void
+  readonly param: (key: string, parameter: string | ((builder: ParameterBuilder) => void)) => void
+}
+
 class __ParameterBuilder extends __CommonContentBuilder<ParameterNode> {
   constructor(key: string) {
     super({ type: 'parameter', key, content: [] })

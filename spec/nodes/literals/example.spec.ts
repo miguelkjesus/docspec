@@ -1,4 +1,4 @@
-import { createExample } from './example'
+import { createExample } from '@/nodes'
 
 describe(createExample, () => {
   it('returns an ExampleNode with type "example"', () => {

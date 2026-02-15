@@ -1,4 +1,4 @@
-import { createLiteral, LiteralNode } from './base'
+import { createLiteral, LiteralNode } from '@/nodes'
 
 describe(createLiteral, () => {
   it('returns the same node reference', () => {
@@ -9,7 +9,7 @@ describe(createLiteral, () => {
   })
 
   it('dedents the value', () => {
-    const node: LiteralNode = {
+    const node = {
       type: 'test',
       value: `
         hello

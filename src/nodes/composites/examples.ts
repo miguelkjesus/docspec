@@ -1,6 +1,6 @@
 import { StripInternals } from '@/internal/utils/types'
 
-import { createExample, ExampleNode } from '../literals'
+import { AddExample, createExample, ExampleNode } from '../literals'
 
 import { __CompositeBuilder, CompositeNode } from './base'
 
@@ -9,7 +9,11 @@ export interface ExamplesNode extends CompositeNode {
   content: ExampleNode[]
 }
 
-class __ExamplesBuilder extends __CompositeBuilder<ExamplesNode> {
+export interface AddExamples {
+  readonly examples: (examples: (builder: ExamplesBuilder) => void) => void
+}
+
+class __ExamplesBuilder extends __CompositeBuilder<ExamplesNode> implements AddExample {
   constructor() {
     super({ type: 'examples', content: [] })
   }

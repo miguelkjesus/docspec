@@ -1,10 +1,15 @@
 export function templateTag<Return>(func: (text: string) => Return) {
-  return (strings: TemplateStringsArray | string, ...expr: string[]) => {
+  return (strings: TemplateStringsArray | string, ...expr: unknown[]) => {
     if (typeof strings === 'string') {
       return func(strings)
     }
 
-    const text = strings.reduce((acc, str, i) => acc + str + (expr[i]?.toString() ?? ''), '')
+    let text = strings[0] ?? ''
+
+    for (let i = 0; i < expr.length; i++) {
+      text += String(expr[i]) + (strings[i + 1] ?? '')
+    }
+
     return func(text)
   }
 }

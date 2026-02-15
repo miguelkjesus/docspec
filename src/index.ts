@@ -1,2 +1,2 @@
-export * from './builder-shorthands'
+export * from './markdown'
 export * from './nodes'
