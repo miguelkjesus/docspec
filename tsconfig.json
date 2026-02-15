@@ -5,18 +5,12 @@
     "lib": ["ES2020"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@spec/*": ["spec/*"]
     },
-
-    /* Output */
-    "outDir": "dist",
-    "rootDir": "src",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "emitDeclarationOnly": false,
 
     /* Type safety */
     "strict": true,
@@ -35,6 +29,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src", "spec"],
   "exclude": ["dist", "node_modules"]
 }

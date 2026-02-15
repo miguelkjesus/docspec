@@ -1,7 +1,10 @@
-export function md(strings: TemplateStringsArray, ...expr: string[]) {
-  const markdown = strings.reduce((acc, str, i) => acc + str + (expr[i]?.toString() ?? ''), '')
+import { templateTag } from './internal/utils/string'
+import { AddMarkdown } from './nodes'
 
-  return (builder: { markdown(markdown: string): void }) => {
+export const markdown = templateTag((markdown: string) => {
+  return (builder: AddMarkdown) => {
     builder.markdown(markdown)
   }
-}
+})
+
+export const md = markdown

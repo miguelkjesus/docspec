@@ -1,8 +1,8 @@
-import { Key, StripInternals } from '@/internal/utils/types'
+import { Key, MethodKeysOf, StripInternals } from '@/internal/utils/types'
 
 import { CompositeNode } from './base'
 import { __CommonContentBuilder, CommonContentNode } from './common'
-import { createParameter, ParameterBuilder, ParameterNode } from './parameter'
+import { AddParameter, createParameter, ParameterBuilder, ParameterNode } from './parameter'
 
 export interface MethodNode extends CompositeNode {
   type: 'method'
@@ -11,18 +11,37 @@ export interface MethodNode extends CompositeNode {
   content: (CommonContentNode | ParameterNode)[]
 }
 
-class __MethodBuilder extends __CommonContentBuilder<MethodNode> {
+export interface AddMethod<T extends object = object> {
+  readonly method: (
+    key: MethodKeysOf<T>,
+    method: string | ((builder: MethodBuilder) => void),
+  ) => void
+}
+
+export interface AddStaticMethod<T extends object = object> {
+  readonly method: {
+    static: (key: MethodKeysOf<T>, method: string | ((builder: MethodBuilder) => void)) => void
+  }
+}
+
+class __MethodBuilder extends __CommonContentBuilder<MethodNode> implements AddParameter {
   constructor(isStatic: boolean, key: Key) {
     super({ type: 'method', isStatic, key, content: [] })
   }
 
-  parameter(key: string, parameter: (builder: ParameterBuilder) => void) {
+  readonly parameter = (key: string, parameter: string | ((builder: ParameterBuilder) => void)) => {
     this.__node.content.push(createParameter(key, parameter))
   }
+
+  readonly param = this.parameter
 }
 
 export type MethodBuilder = StripInternals<__MethodBuilder>
 
-export function createMethod(isStatic: boolean, key: Key, init: (builder: MethodBuilder) => void) {
+export function createMethod(
+  isStatic: boolean,
+  key: Key,
+  init: string | ((builder: MethodBuilder) => void),
+) {
   return new __MethodBuilder(isStatic, key).__build(init)
 }

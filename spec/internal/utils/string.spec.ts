@@ -1,4 +1,4 @@
-import { dedent } from './string'
+import { dedent, templateTag } from '@/internal/utils/string'
 
 describe(dedent, () => {
   it('removes common leading indentation', () => {
@@ -72,5 +72,37 @@ hello
     `)
 
     expect(result).toBe('hello\n  world')
+  })
+})
+
+describe(templateTag, () => {
+  const upper = templateTag((text) => text.toUpperCase())
+
+  it('interpolates expressions like a normal template literal', () => {
+    expect(upper`${42} is ${'the'} answer`).toBe('42 IS THE ANSWER')
+  })
+
+  it('stringifies undefined, null and objects correctly', () => {
+    expect(upper`${undefined} ${null} ${{}}`).toBe('UNDEFINED NULL [OBJECT OBJECT]')
+  })
+
+  it('handles empty template', () => {
+    expect(upper``).toBe('')
+  })
+
+  it('handles template with no expressions', () => {
+    expect(upper`hello world`).toBe('HELLO WORLD')
+  })
+
+  it('handles consecutive expressions', () => {
+    expect(upper`${1}${2}${3}`).toBe('123')
+  })
+
+  it('handles direct string invocation', () => {
+    expect(upper('foo bar')).toBe('FOO BAR')
+  })
+
+  it('preserves whitespace and newlines', () => {
+    expect(upper`a\nb`).toBe('A\nB')
   })
 })

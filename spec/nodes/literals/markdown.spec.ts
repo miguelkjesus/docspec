@@ -1,4 +1,4 @@
-import { createMarkdown } from './markdown'
+import { createMarkdown } from '@/nodes'
 
 describe(createMarkdown, () => {
   it('returns a MarkdownNode with type "markdown"', () => {

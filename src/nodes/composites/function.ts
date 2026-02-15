@@ -2,25 +2,27 @@ import { StripInternals } from '@/internal/utils/types'
 
 import { CompositeNode } from './base'
 import { __CommonContentBuilder, CommonContentNode } from './common'
-import { createParameter, ParameterBuilder, ParameterNode } from './parameter'
+import { AddParameter, createParameter, ParameterBuilder, ParameterNode } from './parameter'
 
 export interface FunctionNode extends CompositeNode {
   type: 'function'
   content: (CommonContentNode | ParameterNode)[]
 }
 
-class __FunctionBuilder extends __CommonContentBuilder<FunctionNode> {
+class __FunctionBuilder extends __CommonContentBuilder<FunctionNode> implements AddParameter {
   constructor() {
     super({ type: 'function', content: [] })
   }
 
-  parameter(key: string, parameter: (builder: ParameterBuilder) => void) {
+  readonly parameter = (key: string, parameter: string | ((builder: ParameterBuilder) => void)) => {
     this.__node.content.push(createParameter(key, parameter))
   }
+
+  readonly param = this.parameter
 }
 
 export type FunctionBuilder = StripInternals<__FunctionBuilder>
 
-export function createFunction(init: (builder: FunctionBuilder) => void) {
+export function createFunction(init: string | ((builder: FunctionBuilder) => void)) {
   return new __FunctionBuilder().__build(init)
 }
