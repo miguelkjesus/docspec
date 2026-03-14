@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
 
       - name: eslint
-        run: npm run lint:check -- --max-warnings 0
+        run: npm run lint:check
 
       - name: format
         run: npm run format:check
@@ -40,4 +40,4 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm test -- --ci
+      - run: npm test

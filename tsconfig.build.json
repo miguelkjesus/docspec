@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["spec"],
+  "exclude": ["spec", "__mocks__", "docs", "*.config.ts"],
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",

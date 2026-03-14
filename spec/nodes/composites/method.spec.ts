@@ -1,10 +1,9 @@
-import {
-  itAddsCommonContentNodes,
-  itAddsParameterNodes,
-  itHasKey,
-} from '@spec/shared-examples/nodes'
+import { itAddsCommonContentNodes } from '@spec/shared-examples/nodes/common.js'
+import { itHasKey } from '@spec/shared-examples/nodes/has-key.js'
+import { itAddsParameterNodes } from '@spec/shared-examples/nodes/parameter.js'
+import { itAddsReturnsNodes } from '@spec/shared-examples/nodes/returns.js'
 
-import { createMethod, MethodBuilder } from '@/nodes'
+import { createMethod, type MethodBuilder } from '@/nodes/composites/method.js'
 
 describe(createMethod, () => {
   const factory = (init: string | ((builder: MethodBuilder) => void)) =>
@@ -13,6 +12,8 @@ describe(createMethod, () => {
   itAddsCommonContentNodes(factory)
 
   itAddsParameterNodes(factory)
+
+  itAddsReturnsNodes(factory)
 
   itHasKey((key) => createMethod(false, key, ''))
 })

@@ -1,14 +1,12 @@
+import { itAddsCommonContentNodes } from '@spec/shared-examples/nodes/common.js'
+import { itAddsMethodNodes, itAddsStaticMethodNodes } from '@spec/shared-examples/nodes/method.js'
 import {
-  itAddsCommonContentNodes,
-  itAddsMethodNodes,
   itAddsPropertyNodes,
-  itAddsStaticMethodNodes,
   itAddsStaticPropertyNodes,
-} from '@spec/shared-examples/nodes'
+} from '@spec/shared-examples/nodes/property.js'
 
-import { createClass } from '@/nodes'
+import { type ClassBuilder, createClass } from '@/nodes/composites/class.js'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare class TestClass {
   testProp: string
   testMethod(): void
@@ -18,7 +16,8 @@ declare class TestClass {
 }
 
 describe(createClass, () => {
-  const factory = createClass<typeof TestClass>
+  const factory = (init: string | ((builder: ClassBuilder<typeof TestClass>) => void)) =>
+    createClass<typeof TestClass>('TestClass', init)
 
   itAddsCommonContentNodes(factory)
 
@@ -29,4 +28,9 @@ describe(createClass, () => {
   itAddsPropertyNodes(factory)
 
   itAddsStaticPropertyNodes(factory)
+
+  it('sets the name property', () => {
+    const result = createClass('MyClass', 'description')
+    expect(result.name).toBe('MyClass')
+  })
 })
