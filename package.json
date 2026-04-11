@@ -36,12 +36,12 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./config": {
-      "default": "./dist/exports/config.js",
-      "types": "./dist/exports/config.d.ts"
+      "types": "./dist/exports/config.d.ts",
+      "default": "./dist/exports/config.js"
     }
   },
   "lint-staged": {
