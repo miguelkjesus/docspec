@@ -1,5 +1,5 @@
-import type { CompositeNode } from '@/nodes/composites/base.js'
-import type { AddProperty, AddStaticProperty } from '@/nodes/composites/property.js'
+import type { CompositeNode } from '@/doc-file/nodes/composites/base.js'
+import type { AddProperty, AddStaticProperty } from '@/doc-file/nodes/composites/property.js'
 
 interface ExampleObject {
   testProp: string

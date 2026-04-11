@@ -3,7 +3,7 @@ import { itHasKey } from '@spec/shared-examples/nodes/has-key.js'
 import { itAddsParameterNodes } from '@spec/shared-examples/nodes/parameter.js'
 import { itAddsReturnsNodes } from '@spec/shared-examples/nodes/returns.js'
 
-import { createMethod, type MethodBuilder } from '@/nodes/composites/method.js'
+import { createMethod, type MethodBuilder } from '@/doc-file/nodes/composites/method.js'
 
 describe(createMethod, () => {
   const factory = (init: string | ((builder: MethodBuilder) => void)) =>
