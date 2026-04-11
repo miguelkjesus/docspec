@@ -10,6 +10,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: build
+        run: npm run build
+
+      - name: publint
+        run: npm run publint:check
+
   code-quality:
     runs-on: ubuntu-latest
     steps:
@@ -26,9 +43,6 @@ jobs:
 
       - name: format
         run: npm run format:check
-
-      - name: build
-        run: npm run build:check
 
   tests:
     runs-on: ubuntu-latest

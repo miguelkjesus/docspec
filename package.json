@@ -22,7 +22,7 @@
     "build:watch": "tsc -p tsconfig.build.json && (concurrently \"tsc -w -p tsconfig.build.json\" \"tsc-alias -w -p tsconfig.build.json --resolve-full-paths\")",
     "build:clean": "rm -rf ./dist && npm run build",
     "type:check": "tsc --noEmit",
-    "build:check": "tsc && publint --strict",
+    "publint:check": "publint --strict",
     "lint": "eslint . --fix",
     "lint:check": "eslint . --max-warnings 0",
     "format": "prettier . --write",
