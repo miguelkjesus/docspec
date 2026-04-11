@@ -10,6 +10,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run publint:check
+
   code-quality:
     runs-on: ubuntu-latest
     steps:
@@ -17,27 +29,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-
+          cache: 'npm'
       - run: npm ci
+      - run: npm run lint:check
+      - run: npm run format:check
 
-      - name: eslint
-        run: npm run lint:check
-
-      - name: format
-        run: npm run format:check
-
-      - name: typecheck
-        run: npm run typecheck
-
-  tests:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-
+          cache: 'npm'
       - run: npm ci
       - run: npm test
