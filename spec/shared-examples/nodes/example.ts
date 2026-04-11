@@ -1,5 +1,5 @@
-import type { CompositeNode } from '@/nodes/composites/base.js'
-import type { AddExample } from '@/nodes/literals/example.js'
+import type { CompositeNode } from '@/doc-file/nodes/composites/base.js'
+import type { AddExample } from '@/doc-file/nodes/literals/example.js'
 
 export function itAddsExampleNodes(
   createNode: (init: (builder: AddExample) => void) => CompositeNode,

@@ -1,4 +1,4 @@
-import { createMarkdown } from '@/nodes/literals/markdown.js'
+import { createMarkdown } from '@/doc-file/nodes/literals/markdown.js'
 
 describe(createMarkdown, () => {
   it('returns a MarkdownNode with type "markdown"', () => {

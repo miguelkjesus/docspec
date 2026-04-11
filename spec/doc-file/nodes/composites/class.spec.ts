@@ -5,7 +5,7 @@ import {
   itAddsStaticPropertyNodes,
 } from '@spec/shared-examples/nodes/property.js'
 
-import { type ClassBuilder, createClass } from '@/nodes/composites/class.js'
+import { type ClassBuilder, createClass } from '@/doc-file/nodes/composites/class.js'
 
 declare class TestClass {
   testProp: string

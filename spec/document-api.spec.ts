@@ -1,16 +1,14 @@
-import { DocumentApi } from '@/nodes/utils/document-api.js'
+import { doc } from '@/doc-file/nodes/utils/document-api.js'
 
-describe('document.class', () => {
-  const document = new DocumentApi()
-
+describe('doc.class', () => {
   it('creates a class node', () => {
-    const result = document.class('', '')
+    const result = doc.class('', '')
 
     expect(result.type).toBe('class')
   })
 
   it('creates node with name from string', () => {
-    const result = document.class('MyClass', '')
+    const result = doc.class('MyClass', '')
 
     expect(result.name).toBe('MyClass')
   })
@@ -19,13 +17,13 @@ describe('document.class', () => {
     // eslint-disable-next-line @typescript-eslint/no-extraneous-class
     class TestClass {}
 
-    const result = document.class(TestClass, '')
+    const result = doc.class(TestClass, '')
 
     expect(result.name).toBe('TestClass')
   })
 
   it('passes docs to builder', () => {
-    const result = document.class('MyClass', (builder) => {
+    const result = doc.class('MyClass', (builder) => {
       builder.text('some text')
     })
 
@@ -33,11 +31,9 @@ describe('document.class', () => {
   })
 })
 
-describe('document.function', () => {
-  const document = new DocumentApi()
-
+describe('doc.function', () => {
   it('creates function node with name from string', () => {
-    const result = document.function('myFunction', 'description')
+    const result = doc.function('myFunction', 'description')
 
     expect(result.name).toBe('myFunction')
   })
@@ -46,13 +42,13 @@ describe('document.function', () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     function testFunction() {}
 
-    const result = document.function(testFunction, 'description')
+    const result = doc.function(testFunction, 'description')
 
     expect(result.name).toBe('testFunction')
   })
 
   it('passes docs to builder', () => {
-    const result = document.function('myFunction', (builder) => {
+    const result = doc.function('myFunction', (builder) => {
       builder.parameter('arg', 'the argument')
     })
 

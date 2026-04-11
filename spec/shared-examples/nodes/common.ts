@@ -1,5 +1,5 @@
-import type { CompositeNode } from '@/nodes/composites/base.js'
-import type { AddCommonContent } from '@/nodes/composites/common.js'
+import type { CompositeNode } from '@/doc-file/nodes/composites/base.js'
+import type { AddCommonContent } from '@/doc-file/nodes/composites/common.js'
 
 import { itAddsExampleNodes } from './example.js'
 import { itAddsExamplesNodes } from './examples.js'

@@ -1,5 +1,5 @@
-import type { CompositeNode } from '@/nodes/composites/base.js'
-import type { AddMarkdown } from '@/nodes/literals/markdown.js'
+import type { CompositeNode } from '@/doc-file/nodes/composites/base.js'
+import type { AddMarkdown } from '@/doc-file/nodes/literals/markdown.js'
 
 export function itAddsMarkdownNodes(
   createNode: (init: (builder: AddMarkdown) => void) => CompositeNode,

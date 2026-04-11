@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 
-import type { AddMarkdown } from '@/nodes/literals/markdown.js'
-import { markdown, md } from '@/nodes/utils/markdown.js'
+import type { AddMarkdown } from '@/doc-file/nodes/literals/markdown.js'
+import { markdown, md } from '@/doc-file/nodes/utils/markdown.js'
 
 describe('markdown', () => {
   it('returns a function that calls builder.markdown with the provided string', () => {
