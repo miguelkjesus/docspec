@@ -14,44 +14,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+      - uses: ./.github/actions/setup
 
-      - run: npm ci
-
-      - name: build
-        run: npm run build
-
-      - name: publint
-        run: npm run publint:check
+      - run: npm run build
+      - run: npm run publint:check
 
   code-quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+      - uses: ./.github/actions/setup
 
-      - run: npm ci
-
-      - name: eslint
-        run: npm run lint:check
-
-      - name: format
-        run: npm run format:check
+      - run: npm run lint:check
+      - run: npm run format:check
 
   tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+      - uses: ./.github/actions/setup
 
-      - run: npm ci
       - run: npm test
