@@ -1,5 +1,7 @@
-import { findUp } from '@/internal/utils/find/find-up.js'
+import { findUp } from '@/utils/find.js'
 
 export function findConfigFile(cwd?: string) {
-  return findUp(['docweaver.config.{ts,mts,cts,js,mjs,cjs,json,yaml,yml}'], cwd ? [cwd] : undefined)
+  return findUp.first('docweaver.config.{ts,mts,cts,js,mjs,cjs,json,yaml,yml}', {
+    cwd,
+  })
 }
