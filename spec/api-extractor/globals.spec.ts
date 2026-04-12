@@ -7,7 +7,10 @@ import { getFileGlobals } from '@/api-extractor/globals.js'
 describe(getFileGlobals, () => {
   function getGlobals(code: string) {
     const program = createMockProgram({ '/index.ts': code })
-    const sourceFile = program.getSourceFile('/index.ts')!
+    const sourceFile = program.getSourceFile('/index.ts')
+
+    if (!sourceFile) throw new Error('Source file not found')
+
     return getFileGlobals(sourceFile)
   }
 

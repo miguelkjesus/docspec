@@ -6,8 +6,11 @@ describe(getModuleExports, () => {
   function getExports(code: string, files: Record<string, string> = {}) {
     const program = createMockProgram({ '/index.ts': code, ...files })
     const checker = program.getTypeChecker()
-    const sourceFile = program.getSourceFile('/index.ts')!
-    return getModuleExports(checker, checker.getSymbolAtLocation(sourceFile)!)
+    const sourceFile = program.getSourceFile('/index.ts')
+
+    if (!sourceFile) throw new Error('Source file not found')
+
+    return getModuleExports(checker, checker.getSymbolAtLocation(sourceFile))
   }
 
   it('returns direct function export', () => {
@@ -84,7 +87,7 @@ describe(getModuleExports, () => {
       const [exp] = getExports('export function directExport() {}')
 
       expect(exp).toBeDefined()
-      expect(exp!.symbol).toBe(exp!.originalSymbol)
+      expect(exp?.symbol).toBe(exp?.originalSymbol)
     })
   })
 
