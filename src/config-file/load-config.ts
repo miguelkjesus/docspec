@@ -4,7 +4,7 @@ import path from 'node:path'
 import yaml from 'js-yaml'
 import { tsImport } from 'tsx/esm/api'
 
-import { findTSConfigFile } from '@/internal/utils/find-tsconfig-file.js'
+import { findUp } from '@/utils/find.js'
 
 import { chooseConfigLoaderMode, type ConfigLoaderMode } from './config-loader-mode.js'
 import { findConfigFile } from './find-config-file.js'
@@ -65,7 +65,7 @@ export async function loadConfig({
     }
 
     case 'bundle': {
-      const { tsconfig = await findTSConfigFile(cwd) } = options.bundle ?? {}
+      const { tsconfig = await findUp.first('tsconfig.json', { cwd }) } = options.bundle ?? {}
 
       const exports = (await tsImport(filePath, {
         tsconfig,
