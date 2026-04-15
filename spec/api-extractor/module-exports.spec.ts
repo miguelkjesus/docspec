@@ -1,6 +1,6 @@
 import { createMockProgram } from '@spec/mocks/ts.js'
 
-import { getModuleExports } from '@/api-extractor/exports.js'
+import { getModuleExports } from '@/api-extractor/module-exports.js'
 
 describe(getModuleExports, () => {
   function getExports(code: string, files: Record<string, string> = {}) {
