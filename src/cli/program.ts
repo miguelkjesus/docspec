@@ -2,6 +2,7 @@ import { Command } from 'commander'
 
 import { loadConfig } from '@/config-file/load-config.js'
 import { mergeConfig } from '@/config-file/merge-config.js'
+import { parseConfig } from '@/config-file/parse-config.js'
 
 import { parseCliOptions } from './options.js'
 
@@ -26,5 +27,5 @@ program
     const options = parseCliOptions(args)
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const config = mergeConfig(await loadConfig(options.config), options)
+    const config = mergeConfig(await loadConfig(options.config), await parseConfig(options))
   })

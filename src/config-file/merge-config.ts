@@ -1,9 +1,11 @@
-import type { Config } from './parse-config.js'
+import type { ResolvedConfig } from './parse-config.js'
 
-export function mergeConfig(base: Config, overrides: Config): Config {
+export function mergeConfig(
+  base: ResolvedConfig,
+  overrides: Partial<ResolvedConfig>,
+): ResolvedConfig {
   return {
-    paths: overrides.paths ?? base.paths,
-    files: overrides.files ?? base.files,
+    package: overrides.package ?? base.package,
     tsconfig: overrides.tsconfig ?? base.tsconfig,
   }
 }
