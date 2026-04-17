@@ -1,39 +1,70 @@
+import { createMockFileSystem } from '@spec/mocks/fs.js'
+
 import { parseConfig } from '@/config-file/parse-config.js'
 
 describe(parseConfig, () => {
-  it('returns an empty object for an empty input', () => {
-    expect(parseConfig({})).toEqual({})
+  it('auto-discovers package.json when not provided', async () => {
+    createMockFileSystem({
+      '/project/package.json': '{}',
+    })
+
+    const result = await parseConfig({}, { cwd: '/project' })
+
+    expect(result.package).toBe('/project/package.json')
   })
 
-  it('returns a valid config with all fields', () => {
-    const input = { paths: ['src/**'], files: ['a.ts'], tsconfig: 'tsconfig.json' }
+  it('returns a valid config with explicit package and tsconfig', async () => {
+    createMockFileSystem({
+      '/project/package.json': '{}',
+      '/project/tsconfig.json': '{}',
+    })
 
-    expect(parseConfig(input)).toEqual(input)
+    const result = await parseConfig(
+      { package: '/project/package.json', tsconfig: '/project/tsconfig.json' },
+      { cwd: '/project' },
+    )
+
+    expect(result.package).toBe('/project/package.json')
+    expect(result.tsconfig).toBe('/project/tsconfig.json')
   })
 
-  it('returns a valid config with only paths', () => {
-    expect(parseConfig({ paths: ['src'] })).toMatchObject({ paths: ['src'] })
+  it('auto-discovers tsconfig.json relative to package.json', async () => {
+    createMockFileSystem({
+      '/project/package.json': '{}',
+      '/project/tsconfig.json': '{}',
+    })
+
+    const result = await parseConfig({}, { cwd: '/project' })
+
+    expect(result.package).toBe('/project/package.json')
+    expect(result.tsconfig).toBe('/project/tsconfig.json')
   })
 
-  it('strips unknown keys', () => {
-    const result = parseConfig({ paths: ['src'], unknown: true })
+  it('strips unknown keys', async () => {
+    createMockFileSystem({
+      '/project/package.json': '{}',
+    })
+
+    const result = await parseConfig({ unknown: true }, { cwd: '/project' })
 
     expect(result).not.toHaveProperty('unknown')
   })
 
-  it('throws when paths is not an array', () => {
-    expect(() => parseConfig({ paths: 'src' })).toThrow()
+  it('throws when package.json cannot be found', async () => {
+    createMockFileSystem({
+      '/project/src/index.ts': '',
+    })
+
+    await expect(parseConfig({}, { cwd: '/project' })).rejects.toThrow(
+      'Could not find a package.json file.',
+    )
   })
 
-  it('throws when a paths element is not a string', () => {
-    expect(() => parseConfig({ paths: [42] })).toThrow()
+  it('throws when package is not a string', async () => {
+    await expect(parseConfig({ package: 123 })).rejects.toThrow()
   })
 
-  it('throws when files is not an array', () => {
-    expect(() => parseConfig({ files: 'a.ts' })).toThrow()
-  })
-
-  it('throws when tsconfig is not a string', () => {
-    expect(() => parseConfig({ tsconfig: 123 })).toThrow()
+  it('throws when tsconfig is not a string', async () => {
+    await expect(parseConfig({ tsconfig: 123 })).rejects.toThrow()
   })
 })

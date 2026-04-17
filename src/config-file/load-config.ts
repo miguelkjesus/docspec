@@ -8,7 +8,7 @@ import { findUp } from '@/utils/find.js'
 
 import { chooseConfigLoaderMode, type ConfigLoaderMode } from './config-loader-mode.js'
 import { findConfigFile } from './find-config-file.js'
-import { type Config, parseConfig } from './parse-config.js'
+import { parseConfig, type ResolvedConfig } from './parse-config.js'
 
 export interface LoadConfigOptions {
   filePath?: string
@@ -30,10 +30,12 @@ export async function loadConfig({
   loader,
   cwd,
   ...options
-}: LoadConfigOptions = {}): Promise<Config> {
+}: LoadConfigOptions = {}): Promise<ResolvedConfig> {
   filePath ??= await findConfigFile(cwd)
 
-  if (!filePath) return {}
+  if (!filePath) {
+    throw new Error('Could not find config file.')
+  }
 
   loader ??= chooseConfigLoaderMode(path.extname(filePath))
 
@@ -44,7 +46,7 @@ export async function loadConfig({
       const contents = await fs.readFile(filePath, { encoding })
       const json = JSON.parse(contents) as unknown
 
-      return parseConfig(json)
+      return await parseConfig(json, { cwd })
     }
 
     case 'yaml': {
@@ -53,7 +55,7 @@ export async function loadConfig({
       const contents = await fs.readFile(filePath, { encoding })
       const yml = yaml.load(contents)
 
-      return parseConfig(yml)
+      return await parseConfig(yml, { cwd })
     }
 
     case 'native': {
@@ -61,7 +63,7 @@ export async function loadConfig({
 
       assertDefaultExport(exports, filePath)
 
-      return parseConfig(exports.default)
+      return await parseConfig(exports.default, { cwd })
     }
 
     case 'bundle': {
@@ -74,7 +76,7 @@ export async function loadConfig({
 
       assertDefaultExport(exports, filePath)
 
-      return parseConfig(exports.default)
+      return await parseConfig(exports.default, { cwd })
     }
 
     case undefined:

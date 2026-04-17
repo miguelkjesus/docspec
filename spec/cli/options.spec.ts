@@ -11,11 +11,10 @@ describe(parseCliOptions, () => {
     })
   })
 
-  it('maps paths and files directly', () => {
-    const result = parseCliOptions({ paths: ['src'], files: ['a.ts'] })
+  it('maps package directly', () => {
+    const result = parseCliOptions({ package: '/project/package.json' })
 
-    expect(result.paths).toEqual(['src'])
-    expect(result.files).toEqual(['a.ts'])
+    expect(result.package).toBe('/project/package.json')
   })
 
   it('maps tsconfig directly', () => {

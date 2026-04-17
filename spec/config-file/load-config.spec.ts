@@ -4,31 +4,33 @@ import { mockTsImport } from '@spec/mocks/setup.js'
 import { loadConfig } from '@/config-file/load-config.js'
 
 describe(loadConfig, () => {
-  it('returns an empty object when no config file is found', async () => {
+  it('throws when no config file is found', async () => {
     createMockFileSystem({
       '/project/package.json': '',
     })
 
-    expect(await loadConfig({ cwd: '/project' })).toEqual({})
+    await expect(loadConfig({ cwd: '/project' })).rejects.toThrow('Could not find config file.')
   })
 
   describe('json loader', () => {
     it('reads the file and parses the JSON content', async () => {
-      const config = { paths: ['src'] }
       createMockFileSystem({
-        '/project/docweaver.config.json': JSON.stringify(config),
+        '/project/package.json': '{}',
+        '/project/docweaver.config.json': JSON.stringify({ package: '/project/package.json' }),
       })
 
       const result = await loadConfig({
         filePath: '/project/docweaver.config.json',
         loader: 'json',
+        cwd: '/project',
       })
 
-      expect(result).toEqual(config)
+      expect(result.package).toBe('/project/package.json')
     })
 
     it('respects a custom encoding option', async () => {
       createMockFileSystem({
+        '/project/package.json': '{}',
         '/project/docweaver.config.json': '{}',
       })
 
@@ -36,28 +38,32 @@ describe(loadConfig, () => {
         filePath: '/project/docweaver.config.json',
         loader: 'json',
         json: { encoding: 'latin1' },
+        cwd: '/project',
       })
 
-      expect(result).toEqual({})
+      expect(result.package).toBe('/project/package.json')
     })
   })
 
   describe('yaml loader', () => {
     it('reads the file and parses YAML content', async () => {
       createMockFileSystem({
-        '/project/docweaver.config.yaml': 'paths:\n  - src\n',
+        '/project/package.json': '{}',
+        '/project/docweaver.config.yaml': 'package: /project/package.json\n',
       })
 
       const result = await loadConfig({
         filePath: '/project/docweaver.config.yaml',
         loader: 'yaml',
+        cwd: '/project',
       })
 
-      expect(result).toEqual({ paths: ['src'] })
+      expect(result.package).toBe('/project/package.json')
     })
 
     it('respects a custom encoding option', async () => {
       createMockFileSystem({
+        '/project/package.json': '{}',
         '/project/docweaver.config.yaml': 'tsconfig: custom.json',
       })
 
@@ -65,23 +71,27 @@ describe(loadConfig, () => {
         filePath: '/project/docweaver.config.yaml',
         loader: 'yaml',
         yaml: { encoding: 'latin1' },
+        cwd: '/project',
       })
 
-      expect(result).toEqual({ tsconfig: 'custom.json' })
+      expect(result.package).toBe('/project/package.json')
+      expect(result.tsconfig).toBe('custom.json')
     })
   })
 
   describe('bundle loader', () => {
     it('calls tsImport and parses the default export', async () => {
-      const config = { tsconfig: 'tsconfig.json' }
-      mockTsImport.mockResolvedValue({ default: config })
+      mockTsImport.mockResolvedValue({ default: { tsconfig: 'tsconfig.json' } })
+
       createMockFileSystem({
+        '/project/package.json': '{}',
         '/project/docweaver.config.ts': '',
       })
 
       const result = await loadConfig({
         filePath: '/project/docweaver.config.ts',
         loader: 'bundle',
+        cwd: '/project',
       })
 
       expect(mockTsImport).toHaveBeenCalledWith(
@@ -90,16 +100,22 @@ describe(loadConfig, () => {
           parentURL: expect.any(String) as unknown,
         }),
       )
-      expect(result).toEqual(config)
+      expect(result.package).toBe('/project/package.json')
+      expect(result.tsconfig).toBe('tsconfig.json')
     })
 
     it('uses the provided tsconfig option', async () => {
       mockTsImport.mockResolvedValue({ default: {} })
+      createMockFileSystem({
+        '/project/package.json': '{}',
+        '/project/docweaver.config.ts': '',
+      })
 
       await loadConfig({
         filePath: '/project/docweaver.config.ts',
         loader: 'bundle',
         bundle: { tsconfig: 'tsconfig.build.json' },
+        cwd: '/project',
       })
 
       expect(mockTsImport).toHaveBeenCalledWith(
@@ -113,6 +129,7 @@ describe(loadConfig, () => {
     it('falls back to findTSConfigFile when no tsconfig option is given', async () => {
       mockTsImport.mockResolvedValue({ default: {} })
       createMockFileSystem({
+        '/project/package.json': '{}',
         '/project/tsconfig.json': '{}',
         '/project/docweaver.config.ts': '',
       })

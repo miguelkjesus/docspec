@@ -1,14 +1,12 @@
 import { type } from 'arktype'
 
 import { ConfigLoaderMode } from '@/config-file/config-loader-mode.js'
+import { Config } from '@/config-file/parse-config.js'
 
 const BufferEncoding = type('string').narrow((v) => Buffer.isEncoding(v))
 type BufferEncoding = typeof BufferEncoding.infer
 
-const CliOptions = type({
-  'paths?': 'string[]',
-  'files?': 'string[]',
-  'tsconfig?': 'string',
+export const CliOptions = Config.and({
   'config?': 'string',
   'config.loader?': ConfigLoaderMode,
   'config.encoding?': BufferEncoding,
@@ -19,10 +17,7 @@ const CliOptions = type({
 
 export type CliOptions = typeof CliOptions.infer
 
-export interface ResolvedCliOptions {
-  paths?: string[]
-  files?: string[]
-  tsconfig?: string
+export interface ResolvedCliOptions extends Config {
   config?: {
     filePath?: string
     loader?: ConfigLoaderMode
@@ -44,8 +39,7 @@ export function parseCliOptions(options: Record<string, unknown>): ResolvedCliOp
   if (data instanceof type.errors) throw new Error(data.summary)
 
   return {
-    paths: data.paths,
-    files: data.files,
+    package: data.package,
     tsconfig: data.tsconfig,
     config: {
       filePath: data.config,
