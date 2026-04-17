@@ -6,6 +6,5 @@ export type LiteralNode = Readonly<{
 }>
 
 export function createLiteral<T extends LiteralNode>(node: T): T {
-  node.value = dedent(node.value)
-  return node
+  return { ...node, value: dedent(node.value) }
 }
