@@ -1,11 +1,12 @@
 import { createLiteral, type LiteralNode } from '@/doc-file/nodes/literals/base.js'
 
 describe(createLiteral, () => {
-  it('returns the same node reference', () => {
+  it('returns a new node', () => {
     const node = { type: 'test', value: 'hello' }
     const result = createLiteral(node)
 
-    expect(result).toBe(node)
+    expect(result).not.toBe(node)
+    expect(result).toEqual(node)
   })
 
   it('dedents the value', () => {
@@ -16,9 +17,9 @@ describe(createLiteral, () => {
       `,
     }
 
-    createLiteral(node)
+    const result = createLiteral(node)
 
-    expect(node.value).toBe('hello')
+    expect(result.value).toBe('hello')
   })
 
   it('preserves extended node properties', () => {
