@@ -4,25 +4,28 @@ import { loadConfig } from '@/config-file/load-config.js'
 import { mergeConfig } from '@/config-file/merge-config.js'
 import { parseConfig } from '@/config-file/parse-config.js'
 
-import { parseCliOptions } from './options.js'
+import { CliOptions, parseCliOptions } from './options.js'
 
 import pkg from '#package.json' with { type: 'json' }
 
-export const program = new Command()
+interface DocweaverCommand extends Command {
+  option(flags: `--${keyof CliOptions} [${string}]`, description: string): this
+}
+
+export const program: DocweaverCommand = new Command()
 
 program
   .name('docweaver')
   .description('CLI for docweaver')
   .version(pkg.version)
-  .option('--paths <paths...>', 'specify the paths to search for documentation files in')
-  .option('--files <paths...>', 'matchers for the documentation files')
-  .option('--tsconfig <paths...>', 'matchers for the documentation files')
-  .option('--config <path>', '')
-  .option('--config.loader <mode>', '')
-  .option('--config.encoding <buffer-encoding>', '')
-  .option('--config.json.encoding <buffer-encoding>', '')
-  .option('--config.yaml.encoding <buffer-encoding>', '')
-  .option('--config.bundle.tsconfig <path>', '')
+  .option('--package [file-path]', 'the package.json file of the package to be documented.')
+  .option('--tsconfig [file-path]', 'the tsconfig.json file of the package to be documented')
+  .option('--config [file-path]', '')
+  .option('--config.loader [mode]', '')
+  .option('--config.encoding [buffer-encoding]', '')
+  .option('--config.json.encoding [buffer-encoding]', '')
+  .option('--config.yaml.encoding [buffer-encoding]', '')
+  .option('--config.bundle.tsconfig [path]', '')
   .action(async (args: Record<string, unknown>) => {
     const options = parseCliOptions(args)
 
