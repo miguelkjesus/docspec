@@ -1,7 +1,8 @@
 import { type } from 'arktype'
 
 import { ConfigLoaderMode } from '@/config-file/config-loader-mode.js'
-import { Config } from '@/config-file/parse-config.js'
+import type { LoadAndResolveConfigOptions } from '@/config-file/load-config.js'
+import { Config } from '@/config-file/resolve-config.js'
 
 const BufferEncoding = type('string').narrow((v) => Buffer.isEncoding(v))
 type BufferEncoding = typeof BufferEncoding.infer
@@ -10,34 +11,15 @@ export const CliOptions = Config.and({
   'config?': 'string',
   'config.loader?': ConfigLoaderMode,
   'config.encoding?': BufferEncoding,
-  'config.json.encoding?': BufferEncoding,
-  'config.yaml.encoding?': BufferEncoding,
-  'config.bundle.tsconfig?': 'string',
+  'config.tsconfig?': 'string',
 })
 
 export type CliOptions = typeof CliOptions.infer
 
-export type ResolvedCliOptions = Readonly<Config> &
-  Readonly<{
-    config?: {
-      filePath?: string
-      loader?: ConfigLoaderMode
-      json?: {
-        encoding?: BufferEncoding
-      }
-      yaml?: {
-        encoding?: BufferEncoding
-      }
-      bundle?: {
-        tsconfig?: string
-      }
-    }
-  }>
+export type ResolvedCliOptions = LoadAndResolveConfigOptions
 
-export function parseCliOptions(options: Record<string, unknown>): ResolvedCliOptions {
-  const data = CliOptions(options)
-
-  if (data instanceof type.errors) throw new Error(data.summary)
+export function resolveCliOptions(options: Record<string, unknown>): ResolvedCliOptions {
+  const data = CliOptions.assert(options)
 
   return {
     package: data.package,
@@ -46,13 +28,13 @@ export function parseCliOptions(options: Record<string, unknown>): ResolvedCliOp
       filePath: data.config,
       loader: data['config.loader'],
       json: {
-        encoding: data['config.json.encoding'] ?? data['config.encoding'],
+        encoding: data['config.encoding'],
       },
       yaml: {
-        encoding: data['config.yaml.encoding'] ?? data['config.encoding'],
+        encoding: data['config.encoding'],
       },
       bundle: {
-        tsconfig: data['config.bundle.tsconfig'] ?? data.tsconfig,
+        tsconfig: data['config.tsconfig'] ?? data.tsconfig,
       },
     },
   }

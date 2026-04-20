@@ -4,12 +4,12 @@ import { mockTsImport } from '@spec/mocks/setup.js'
 import { loadConfig } from '@/config-file/load-config.js'
 
 describe(loadConfig, () => {
-  it('throws when no config file is found', async () => {
+  it('returns an empty config when no config file is found', async () => {
     createMockFileSystem({
       '/project/package.json': '',
     })
 
-    await expect(loadConfig({ cwd: '/project' })).rejects.toThrow('Could not find config file.')
+    await expect(loadConfig({ cwd: '/project' })).resolves.toEqual({})
   })
 
   describe('json loader', () => {
@@ -30,8 +30,7 @@ describe(loadConfig, () => {
 
     it('respects a custom encoding option', async () => {
       createMockFileSystem({
-        '/project/package.json': '{}',
-        '/project/docweaver.config.json': '{}',
+        '/project/docweaver.config.json': JSON.stringify({ tsconfig: 'custom.json' }),
       })
 
       const result = await loadConfig({
@@ -41,7 +40,7 @@ describe(loadConfig, () => {
         cwd: '/project',
       })
 
-      expect(result.package).toBe('/project/package.json')
+      expect(result.tsconfig).toBe('custom.json')
     })
   })
 
@@ -63,7 +62,6 @@ describe(loadConfig, () => {
 
     it('respects a custom encoding option', async () => {
       createMockFileSystem({
-        '/project/package.json': '{}',
         '/project/docweaver.config.yaml': 'tsconfig: custom.json',
       })
 
@@ -74,7 +72,6 @@ describe(loadConfig, () => {
         cwd: '/project',
       })
 
-      expect(result.package).toBe('/project/package.json')
       expect(result.tsconfig).toBe('custom.json')
     })
   })
@@ -84,7 +81,6 @@ describe(loadConfig, () => {
       mockTsImport.mockResolvedValue({ default: { tsconfig: 'tsconfig.json' } })
 
       createMockFileSystem({
-        '/project/package.json': '{}',
         '/project/docweaver.config.ts': '',
       })
 
@@ -100,7 +96,6 @@ describe(loadConfig, () => {
           parentURL: expect.any(String) as unknown,
         }),
       )
-      expect(result.package).toBe('/project/package.json')
       expect(result.tsconfig).toBe('tsconfig.json')
     })
 
@@ -153,7 +148,7 @@ describe(loadConfig, () => {
 
       await expect(
         loadConfig({ filePath: '/project/docweaver.config.ts', loader: 'bundle' }),
-      ).rejects.toThrow('Expected /project/docweaver.config.ts to have a default export')
+      ).rejects.toThrow('default must be an object')
     })
   })
 

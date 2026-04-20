@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { type } from 'arktype'
 import yaml from 'js-yaml'
 import { tsImport } from 'tsx/esm/api'
 
@@ -8,7 +9,8 @@ import { findUp } from '@/utils/find.js'
 
 import { chooseConfigLoaderMode, type ConfigLoaderMode } from './config-loader-mode.js'
 import { findConfigFile } from './find-config-file.js'
-import { parseConfig, type ResolvedConfig } from './parse-config.js'
+import { mergeConfig } from './merge-config.js'
+import { Config, resolveConfig } from './resolve-config.js'
 
 export type LoadConfigOptions = Readonly<{
   filePath?: string
@@ -30,12 +32,10 @@ export async function loadConfig({
   loader,
   cwd,
   ...options
-}: LoadConfigOptions = {}): Promise<ResolvedConfig> {
+}: LoadConfigOptions = {}): Promise<Config> {
   filePath ??= await findConfigFile(cwd)
 
-  if (!filePath) {
-    throw new Error('Could not find config file.')
-  }
+  if (!filePath) return Config.assert({})
 
   loader ??= chooseConfigLoaderMode(path.extname(filePath))
 
@@ -46,7 +46,7 @@ export async function loadConfig({
       const contents = await fs.readFile(filePath, { encoding })
       const json = JSON.parse(contents) as unknown
 
-      return await parseConfig(json, { cwd })
+      return Config.assert(json)
     }
 
     case 'yaml': {
@@ -55,28 +55,26 @@ export async function loadConfig({
       const contents = await fs.readFile(filePath, { encoding })
       const yml = yaml.load(contents)
 
-      return await parseConfig(yml, { cwd })
+      return Config.assert(yml)
     }
 
     case 'native': {
-      const exports = (await import(filePath)) as unknown
+      const exports = ConfigExport.assert(await import(filePath))
 
-      assertDefaultExport(exports, filePath)
-
-      return await parseConfig(exports.default, { cwd })
+      return exports.default
     }
 
     case 'bundle': {
       const { tsconfig = await findUp.first('tsconfig.json', { cwd }) } = options.bundle ?? {}
 
-      const exports = (await tsImport(filePath, {
-        tsconfig,
-        parentURL: import.meta.url,
-      })) as unknown
+      const exports = ConfigExport.assert(
+        await tsImport(filePath, {
+          tsconfig,
+          parentURL: import.meta.url,
+        }),
+      )
 
-      assertDefaultExport(exports, filePath)
-
-      return await parseConfig(exports.default, { cwd })
+      return exports.default
     }
 
     case undefined:
@@ -86,11 +84,15 @@ export async function loadConfig({
   }
 }
 
-function assertDefaultExport(
-  exports: unknown,
-  filePath: string,
-): asserts exports is { default: unknown } {
-  if (!exports || !(typeof exports === 'object') || !('default' in exports)) {
-    throw new Error(`Expected ${filePath} to have a default export.`)
-  }
+export type LoadAndResolveConfigOptions = Config &
+  Readonly<{
+    config?: LoadConfigOptions
+  }>
+
+export async function loadAndResolveConfig(options: LoadAndResolveConfigOptions) {
+  const config = await loadConfig(options.config)
+
+  return await resolveConfig(mergeConfig(config, options))
 }
+
+const ConfigExport = type({ default: Config })

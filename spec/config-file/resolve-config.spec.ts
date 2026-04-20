@@ -1,14 +1,14 @@
 import { createMockFileSystem } from '@spec/mocks/fs.js'
 
-import { parseConfig } from '@/config-file/parse-config.js'
+import { Config, resolveConfig } from '@/config-file/resolve-config.js'
 
-describe(parseConfig, () => {
+describe(resolveConfig, () => {
   it('auto-discovers package.json when not provided', async () => {
     createMockFileSystem({
       '/project/package.json': '{}',
     })
 
-    const result = await parseConfig({}, { cwd: '/project' })
+    const result = await resolveConfig({}, { cwd: '/project' })
 
     expect(result.package).toBe('/project/package.json')
   })
@@ -19,7 +19,7 @@ describe(parseConfig, () => {
       '/project/tsconfig.json': '{}',
     })
 
-    const result = await parseConfig(
+    const result = await resolveConfig(
       { package: '/project/package.json', tsconfig: '/project/tsconfig.json' },
       { cwd: '/project' },
     )
@@ -34,7 +34,7 @@ describe(parseConfig, () => {
       '/project/tsconfig.json': '{}',
     })
 
-    const result = await parseConfig({}, { cwd: '/project' })
+    const result = await resolveConfig({}, { cwd: '/project' })
 
     expect(result.package).toBe('/project/package.json')
     expect(result.tsconfig).toBe('/project/tsconfig.json')
@@ -45,7 +45,7 @@ describe(parseConfig, () => {
       '/project/package.json': '{}',
     })
 
-    const result = await parseConfig({ unknown: true }, { cwd: '/project' })
+    const result = await resolveConfig({ unknown: true } as Config, { cwd: '/project' })
 
     expect(result).not.toHaveProperty('unknown')
   })
@@ -55,16 +55,16 @@ describe(parseConfig, () => {
       '/project/src/index.ts': '',
     })
 
-    await expect(parseConfig({}, { cwd: '/project' })).rejects.toThrow(
+    await expect(resolveConfig({}, { cwd: '/project' })).rejects.toThrow(
       'Could not find a package.json file.',
     )
   })
 
   it('throws when package is not a string', async () => {
-    await expect(parseConfig({ package: 123 })).rejects.toThrow()
+    await expect(resolveConfig({ package: 123 } as unknown as Config)).rejects.toThrow()
   })
 
   it('throws when tsconfig is not a string', async () => {
-    await expect(parseConfig({ tsconfig: 123 })).rejects.toThrow()
+    await expect(resolveConfig({ tsconfig: 123 } as unknown as Config)).rejects.toThrow()
   })
 })
