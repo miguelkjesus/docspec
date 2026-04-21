@@ -8,15 +8,15 @@ export const Config = type({
   /**
    * The path to the package's package.json file.
    */
-  'package?': 'string',
+  'package?': 'string | undefined',
 
   /**
    * The path to the package's tsconfig.json file.
    */
-  'tsconfig?': 'string',
+  'tsconfig?': 'string | undefined',
 })
 
-export type Config = typeof Config.infer
+export type Config = Readonly<typeof Config.infer>
 
 export type ResolvedConfig = Readonly<{
   package: string
@@ -27,17 +27,13 @@ export type ParseConfigOptions = Readonly<{
   cwd?: string
 }>
 
-export async function parseConfig(
-  config: unknown,
+export async function resolveConfig(
+  config: Config,
   { cwd }: ParseConfigOptions = {},
 ): Promise<ResolvedConfig> {
-  const data = Config(config)
-
-  if (data instanceof type.errors) throw new Error(data.summary)
-
   // #package
 
-  const packageJson = data.package ?? (await findUp.first('package.json', { cwd }))
+  const packageJson = config.package ?? (await findUp.first('package.json', { cwd }))
 
   if (!packageJson) {
     throw new Error('Could not find a package.json file.')
@@ -47,7 +43,8 @@ export async function parseConfig(
 
   // #tsconfig
 
-  const tsconfig = data.tsconfig ?? (await findUp.first('tsconfig.json', { cwd: packageDirectory }))
+  const tsconfig =
+    config.tsconfig ?? (await findUp.first('tsconfig.json', { cwd: packageDirectory }))
 
   return {
     package: packageJson,
